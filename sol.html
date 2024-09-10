@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Solana Balances</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    img {
+      width: 150px;
+      height: 150px;
+      border-radius: 0px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Solana Balances</h1>
+  <table id="balances-table">
+    <thead>
+      <tr>
+        <th>Wallet Owner</th>
+        <th>SOL Balance</th>
+        <th>USD Equivalent (approx.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Add table rows here -->
+      <!-- Example: -->
+      <tr>
+        <td><img src="images/krypto.jpg" alt="Krypto"></td>
+        <td id="krypto-sol-balance">12345.67 SOL</td>
+        <td id="krypto-usd-equivalent">$742.33 (approx.)</td>
+      </tr>
+      <tr>
+        <td><img src="images/hugh.JPG" alt="Hugh"></td>
+        <td id="hugh-sol-balance">9876.54 SOL</td>
+        <td id="hugh-usd-equivalent">$586.91 (approx.)</td>
+      </tr>
+      <tr>
+        <td><img src="images/alex.JPG" alt="Alex"></td>
+        <td id="alex-sol-balance">6789.01 SOL</td>
+        <td id="alex-usd-equivalent">$409.17 (approx.)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    const { Connection } = require('@solana/web3.js');
+
+    // Create a Solana connection object
+    const connection = new Connection('http://localhost:8899');
+
+    // Define a function to fetch wallet balances
+    async function getWalletBalances() {
+      const wallets = [
+        { name: 'Krypto', address: 'Bv1n1vABcpT1C8CToMi1K3WxYygzH6GUaGmAf3dpQgTq' },
+        { name: 'Hugh', address: '4yFG7PG8Kjx7dKwLcbYhykAvyuKwz5V8H42pv1zMmHcc' },
+        { name: 'Alex', address: 'A3eQDqv26uJK8DCNiuawyVhoakFZxtR5DGSV2PV2H2hq' }
+      ];
+
+      for (const wallet of wallets) {
+        try {
+          const balance = await connection.getBalance(wallet.address);
+          console.log(`${wallet.name}'s current balance is: ${balance}`);
+          // Update the table rows with the actual balances
+          document.getElementById(`${wallet.name}-sol-balance`).innerText = `${balance} SOL`;
+          document.getElementById(`${wallet.name}-usd-equivalent`).innerText = `$$${(balance * 0.000006).toFixed(2)} (approx.)`;
+        } catch (error) {
+          console.error(`Error fetching ${wallet.name}'s balance:`, error);
+        }
+      }
+    }
+
+    // Call the function to update the table
+    getWalletBalances();
+  </script>
+</body>
+</html>
